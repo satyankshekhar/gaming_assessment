@@ -1,0 +1,37 @@
+const puppeteer = require('puppeteer');
+(async () => {
+  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  const page = await browser.newPage();
+  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+  page.on('pageerror', err => console.log('PAGE ERROR:', err.toString()));
+  await page.goto('http://localhost:8081', { waitUntil: 'networkidle0' });
+  
+  await page.evaluate(() => {
+     document.querySelector('input[name="mode"][value="full"]').parentElement.click();
+  });
+  await new Promise(r => setTimeout(r, 500));
+  
+  await page.click('#btn-start-full');
+  await new Promise(r => setTimeout(r, 2000));
+  
+  // Click first cell (0, 0)
+  await page.evaluate(() => {
+     document.querySelector('.pf-cell[data-r="0"][data-c="0"]').click();
+  });
+  await new Promise(r => setTimeout(r, 500));
+  
+  // Rotate
+  await page.click('#btn-pathfinding-rotate');
+  await new Promise(r => setTimeout(r, 500));
+
+  // Change Direction
+  await page.click('#btn-pathfinding-dir');
+  await new Promise(r => setTimeout(r, 500));
+  
+  // Submit
+  await page.click('#btn-pathfinding-submit');
+  await new Promise(r => setTimeout(r, 1000));
+  
+  await browser.close();
+  console.log("TEST FINISHED");
+})();
