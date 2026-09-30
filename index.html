@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Games Trainer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="bg-decorations">
+        <div class="decor circle c1"></div>
+        <div class="decor circle c2"></div>
+        <div class="decor square s1"></div>
+    </div>
+
+    <header class="app-header">
+        <h1>🧠 Brain Games</h1>
+        <div class="header-controls">
+            <div class="xp-display">
+                <span id="xp-text">0 XP</span>
+                <div class="xp-bar-container"><div id="xp-bar"></div></div>
+            </div>
+            <button id="btn-home" class="btn secondary" style="display:none;">🏠 Home</button>
+        </div>
+    </header>
+
+    <main id="app-container">
+        <!-- Dashboard View -->
+        <section id="view-dashboard" class="view active">
+            <div class="dashboard-header">
+                <h2>Train your brain.<br>Beat your best score!</h2>
+            </div>
+            
+            <div class="settings-panel card">
+                <div class="control-group" id="difficulty-control-group">
+                    <label>Difficulty:</label>
+                    <div class="radio-group" id="difficulty-select">
+                        <label class="radio-btn"><input type="radio" name="diff" value="assessment"> 🟢 Normal</label>
+                        <label class="radio-btn"><input type="radio" name="diff" value="hard" checked> 🟠 Hard</label>
+                        <label class="radio-btn"><input type="radio" name="diff" value="extreme"> 🔴 Extreme</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Mode:</label>
+                    <div class="radio-group" id="mode-select">
+                        <label class="radio-btn"><input type="radio" name="mode" value="practice" checked> 🎮 Practice</label>
+                        <label class="radio-btn"><input type="radio" name="mode" value="full"> 🏆 PF Assessment (30 Puzzles)</label>
+                    </div>
+                </div>
+                <div class="control-group" id="assessment-info" style="display: none; justify-content: center;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0; text-align: center;">30 puzzles • Difficulty increases automatically</p>
+                </div>
+            </div>
+
+            <div class="game-cards">
+                <div class="card game-card" id="card-game1">
+                    <div class="card-icon">🧮</div>
+                    <h3>Arithmetic Rush</h3>
+                    <p>Sort the numbers!</p>
+                    <div class="best-score" id="best-arithmetic">Best: 0</div>
+                    <button class="btn primary btn-start" data-game="arithmetic">PLAY →</button>
+                </div>
+                <div class="card game-card" id="card-game2">
+                    <div class="card-icon">🧩</div>
+                    <h3>Path Finder</h3>
+                    <p>Connect the path!</p>
+                    <div class="best-score" id="best-pathfinding">Best: 0</div>
+                    <button class="btn primary btn-start" data-game="pathfinding">PLAY →</button>
+                </div>
+                <div class="card game-card" id="card-game3">
+                    <div class="card-icon">🔑</div>
+                    <h3>Key Hunt</h3>
+                    <p>Find the keys!</p>
+                    <div class="best-score" id="best-keyhunt">Best: 0</div>
+                    <button class="btn primary btn-start" data-game="keyhunt">PLAY →</button>
+                </div>
+            </div>
+            
+            <div class="full-assessment-section" style="text-align: center; margin-top: 2rem;">
+                <button class="btn primary btn-start-full" style="padding: 1rem 3rem; font-size: 1.2em; display: none;" id="btn-start-full">🚀 START FULL ASSESSMENT</button>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-val" id="stat-best-score">0</div>
+                    <div class="stat-label">Best Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-val" id="stat-current-streak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-val" id="stat-best-streak">0</div>
+                    <div class="stat-label">Best Streak</div>
+                </div>
+            </div>
+            
+            <button id="btn-clear-history" class="btn secondary" style="margin-top: 2rem; align-self: center; opacity: 0.7;">Clear Progress</button>
+        </section>
+
+        <!-- Game 1: Arithmetic View -->
+        <section id="view-arithmetic" class="view game-view">
+            <div class="game-header">
+                <h2>🧮 Arithmetic Rush</h2>
+                <div class="game-stats">
+                    <div class="timer-playful">⏱️ <span id="arithmetic-time">15.0</span>s</div>
+                    <div class="score-playful">⭐ <span id="arithmetic-score">0</span></div>
+                    <div class="streak-playful" id="arithmetic-streak" style="display:none;">🔥 0!</div>
+                </div>
+            </div>
+            <div class="game-area">
+                <div id="arithmetic-bubbles" class="bubbles-container"></div>
+                <div class="bubble-order-indicator" id="arithmetic-order"></div>
+                <div class="game-feedback" id="arithmetic-feedback"></div>
+            </div>
+            <div class="game-controls">
+                <button class="btn secondary btn-pause">⏸️ Pause</button>
+            </div>
+        </section>
+
+        <!-- Game 2: Pathfinding View -->
+        <section id="view-pathfinding" class="view game-view">
+            <div class="game-header">
+                <h2>🧩 Path Finder</h2>
+                <div class="game-stats">
+                    <div class="timer-playful">⏱️ <span id="pathfinding-time">300</span>s</div>
+                    <div class="score-playful">🔄 <span id="pathfinding-rotations">0</span></div>
+                </div>
+            </div>
+            <div class="game-area">
+                <div id="pathfinding-grid" class="grid-container"></div>
+                <div class="game-feedback" id="pathfinding-feedback"></div>
+            </div>
+            <div class="game-controls" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button id="btn-pathfinding-rotate" class="btn pf-control-btn">↻ Rotate</button>
+                <button id="btn-pathfinding-dir" class="btn pf-control-btn">↔ Direction</button>
+                <button id="btn-pathfinding-submit" class="btn pf-control-btn pf-submit">▶ Submit</button>
+            </div>
+        </section>
+
+        <!-- Game 3: Key Hunt View -->
+        <section id="view-keyhunt" class="view game-view">
+            <div class="game-header">
+                <h2>🔑 Key Hunt</h2>
+                <div class="game-stats">
+                    <div class="timer-playful">⏱️ <span id="keyhunt-time">300</span>s</div>
+                    <div class="score-playful">🔑 <span id="keyhunt-keys">0/0</span></div>
+                </div>
+            </div>
+            <div class="game-area">
+                <div id="keyhunt-grid" class="grid-container"></div>
+                <div class="game-feedback" id="keyhunt-feedback"></div>
+            </div>
+            <div class="game-controls">
+                <button class="btn secondary btn-pause">⏸️ Pause</button>
+            </div>
+        </section>
+
+        <!-- Results View -->
+        <section id="view-results" class="view results-view">
+            <h2 id="results-title" class="bounce-in">🎉 GREAT JOB!</h2>
+            <div class="stars-display" id="results-stars">⭐⭐⭐</div>
+            <div class="results-main-score" id="results-main-score">0</div>
+            
+            <div class="results-bars">
+                <div class="bar-group" id="results-bar-1"></div>
+                <div class="bar-group" id="results-bar-2"></div>
+            </div>
+
+            <div id="results-content" class="results-container"></div>
+            <div class="results-actions">
+                <button id="btn-results-retry" class="btn primary">🔄 PLAY AGAIN</button>
+                <button id="btn-results-next" class="btn primary" style="display: none;">▶️ NEXT GAME</button>
+                <button id="btn-results-home" class="btn secondary">🏠 HOME</button>
+            </div>
+        </section>
+        
+        <!-- Pause Overlay -->
+        <div id="pause-overlay" class="overlay">
+            <div class="overlay-content card">
+                <h2>⏸️ Paused</h2>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                    <button id="btn-resume" class="btn primary">▶️ Resume</button>
+                    <button id="btn-quit" class="btn danger">⏹️ Quit</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
